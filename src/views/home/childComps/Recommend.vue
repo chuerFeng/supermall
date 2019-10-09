@@ -24,17 +24,17 @@ export default {
 
 <style lang="scss" scoped>
 .recommend{
-  // display: flex;
+  display: flex;
   justify-content: center;
   width: 100%;
-  padding: 10px 5px 15px;
+  padding: 10px 0px 15px;
   font-size: 15px;
-  // box-shadow: 0px 6px 6px rgba(100, 100, 100, 0.1);
   border-bottom: 10px solid #efefef;
 
   .recommend-item {  
-    display: inline-block;
-    width: 25%;    
+    // display: inline-block;
+    flex: 1;
+    // width: 25%;    
 
     a {
       text-align: center;

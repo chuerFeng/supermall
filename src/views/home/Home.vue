@@ -3,12 +3,16 @@
     <nav-bar class="home-nav">
       <div slot='center'>购物车</div>
     </nav-bar>
-    <home-swiper :banner='banner'></home-swiper>
-    <homeRecommend :recommends='recommend'></homeRecommend> 
-    <population/>
+    <scroll class="content">      
+      <home-swiper :banner='banner'></home-swiper>
+      <homeRecommend :recommends='recommend'></homeRecommend> 
+      <population/>
+      <tab-control class="tab-control" :titles="tabItems" @sendTabIndex="tabClick"></tab-control>
+      <goods-list :goodsList="showGoodsList" ></goods-list>
+    </scroll>
 
-    <tab-control class="tab-control" :titles="tabItems" @sendTabIndex="tabClick"></tab-control>
-    <goods-list  ></goods-list>
+    <back-top v-show="showBack" />
+   
   </div>
 </template>
 
@@ -19,6 +23,8 @@ const homeRecommend = () => import('@views/home/childComps/Recommend')
 const Population = () => import('@views/home/childComps/Population')
 const TabControl = () => import('@components/content/TabControl')
 const GoodsList = () => import('@components/content/goods/GoodsList')
+const Scroll = () => import('@components/comment/scroll/scroll')
+const BackTop = () => import('@components/content/BackTop.vue')
 
 import { getHomeMultidata, getHomeGoods } from '@network/home'
 
@@ -44,9 +50,13 @@ export default {
     this.getHomeGoods('sell')
     this.tabClick()
   }, 
-  watch: {
-    'tabClickData': function (newVal, oldVal) {
-      
+  computed: {
+    showGoodsList() {
+      return this.goods[this.currentType].list
+    },
+
+    showBack() {
+      return 0
     }
   },
   methods: {
@@ -54,9 +64,8 @@ export default {
     /**
      * 事件监听相关方法
      */
-    tabClick(index=0 , type='new') {
-      console.log(this.goods[type].list)
-      return this.goods[type].list
+    tabClick( index, type='new') {
+      this.currentType = type
     },
 
 
@@ -64,20 +73,28 @@ export default {
      * 网络请求相关方法
      */
     getHomeMultidata() {
-      getHomeMultidata().then( res => {
-        this.banner = res.data.banner.list
-        this.recommend = res.data.recommend.list
-      })
+      getHomeMultidata()
+        .then( res => {
+          this.banner = res.data.banner.list
+          this.recommend = res.data.recommend.list
+        })
+        .catch( () => {
+          this.banner = {}
+          this.recommend = {}
+        })
     },
 
     getHomeGoods(type) {
       var thisGoods = this.goods[type]
       var page = thisGoods.page + 1
-      getHomeGoods(type , page).then(res => {
-        var data = res.data
-        thisGoods.list.push(...data.list)
-        thisGoods.page += 1
-      })
+      getHomeGoods(type , page)
+        .then(res => {
+          thisGoods.list.push(...res.data.list)
+          thisGoods.page += 1
+        })
+        .catch( () => {
+          thisGoods.list.push([])
+        })
     }
 
   },
@@ -88,13 +105,19 @@ export default {
     homeRecommend,
     Population,
     TabControl,
-    GoodsList
+    GoodsList,
+    Scroll,
+    BackTop
   }
 
 }
 </script>
 
 <style scoped>
+#home {
+  height: 100vh;
+  padding-top: 44px;
+}
 
 .home-nav {
   background-color: var(--color-tint);
@@ -103,8 +126,12 @@ export default {
 }
 
 .tab-control {
-  position: sticky;
   top: 44px;
+}
+
+.content {
+  height: calc(100% - 49px);
+  overflow: hidden;
 }
 
 </style>

@@ -29,6 +29,7 @@ export default {
   methods: {
     changeActive(index, type) { // 改变当前tab下标并将值传给父组件
       this.activeIndex = index
+      
       this.$emit('sendTabIndex', index, type)
     }
   },

@@ -1,6 +1,6 @@
 <template>     
   <div class="list-item">
-      <img :src="goodsItem.show.img" alt="goodsItem.title">
+      <img :src="showImage" alt="goodsItem.title"  :key="showImage">
       <div>
         <p>{{ goodsItem.title }}</p>
         <span class="price">{{ goodsItem.price }}元</span>
@@ -20,7 +20,15 @@ export default {
         return []
       }      
     }
-  }
+  },
+  computed: {
+    showImage() {
+      return this.goodsItem.show.img || 
+             this.goodsItem.show.image || 
+             this.goodsItem.show.images ||
+             this.goodsItem.show.imgs 
+    }
+  },
 
 }
 </script>

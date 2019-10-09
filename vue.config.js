@@ -1,5 +1,5 @@
 // const path = require('path')
-// 
+
 // function resolve(dir) {
 //   return path.join(__dirname, dir)
 // }
@@ -28,9 +28,9 @@
 // }
 
 module.exports = {
-  lintOnSave:false,
+  lintOnSave: true,
   configureWebpack: {
-    resolve: {
+    resolve: {  
       // 起别名
       alias: {
         '@assets': '@/assets/',
@@ -40,6 +40,12 @@ module.exports = {
         '@network': '@/network/',
         '@store': '@/store/',
       }
+    }
+  },
+  devServer: {
+    overlay: {
+      warnings: true,
+      errors: true
     }
   }
 }

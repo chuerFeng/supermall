@@ -21,9 +21,5 @@ export default {
 <style lang="scss" scope>
   @import './assets/css/base.css';
 
-  #app {
-    padding: 44px 0 49px;
-  }
 
-  
 </style>
